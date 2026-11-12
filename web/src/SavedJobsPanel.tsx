@@ -1,0 +1,36 @@
+import { useEffect, useRef, useState } from 'react';
+import { ApiError } from './api';
+import { exportMetadata, type ExportMetadata } from './exportClient';
+import { listJobs, getJob, cancelJob, type JobRow, type JobDetail } from './jobsClient';
+import type { WriterHeaders } from './uploads';
+const terminal = new Set(['completed', 'failed', 'cancelled', 'interrupted']);
+const states: Record<string,string> = { completed: 'Завершена', failed: 'Ошибка', cancelled: 'Отменена', interrupted: 'Прервана', running: 'Выполняется', queued: 'В очереди' };
+const scalar = (v: unknown) => typeof v === 'string' || typeof v === 'number' ? String(v) : '';
+export default function SavedJobsPanel({ currentProjectId, writerHeaders, onOpenProject, onSessionLost, onRecover }: { currentProjectId?: string | null; writerHeaders: () => WriterHeaders | null; onOpenProject: (id: string) => void; onSessionLost: () => void; onRecover?: (kind: 'audio_import' | 'cover_import', id: string) => void }) {
+ const callbacks = useRef({ onOpenProject, onSessionLost }); callbacks.current = { onOpenProject, onSessionLost };
+ const [scope,setScope] = useState('all'); const [state,setState] = useState('all'); const [rows,setRows] = useState<JobRow[]>([]); const [cursor,setCursor] = useState<string|null>(null); const [selected,setSelected] = useState<JobRow|null>(null); const [detail,setDetail] = useState<JobDetail|null>(null); const [metadata,setMetadata] = useState<ExportMetadata|null>(null); const [error,setError] = useState(''); const [notice,setNotice] = useState(''); const [refresh,setRefresh] = useState(0); const [loading,setLoading] = useState(false);
+ const listCtl = useRef<AbortController|null>(null); const listBusy = useRef(false); const detailCtl = useRef<AbortController|null>(null); const cancelCtl = useRef<AbortController|null>(null);
+ const fail = (e: unknown, signal: AbortSignal) => { if (signal.aborted) return; if (e instanceof ApiError && e.status === 401) callbacks.current.onSessionLost(); else setError(e instanceof Error ? e.message : String(e)); };
+ const load = async (after?: string) => {
+  if (listBusy.current) return;
+  listBusy.current = true; setLoading(true);
+  const ctl = new AbortController(); listCtl.current = ctl;
+  try {
+   const query = new URLSearchParams({ limit: '20' });
+   if (scope === 'current' && currentProjectId) query.set('project_id', currentProjectId);
+   if (state !== 'all') query.set('state', state);
+   if (after) query.set('after', after);
+   const result = await listJobs(query, ctl.signal);
+   if (ctl.signal.aborted || listCtl.current !== ctl) return;
+   setRows(current => after ? [...current, ...result.items] : result.items);
+   setCursor(result.next_cursor);
+  } catch (e) { fail(e, ctl.signal); }
+  finally { if (listCtl.current === ctl) { listCtl.current = null; listBusy.current = false; setLoading(false); } }
+ };
+ useEffect(() => { setRows([]); setCursor(null); setSelected(null); setError(''); void load(); return () => { listCtl.current?.abort(); listBusy.current = false; }; }, [scope,state,currentProjectId,refresh]);
+ useEffect(() => { setDetail(null); setMetadata(null); setNotice(''); setError(''); if (!selected) return; const ctl = new AbortController(); detailCtl.current = ctl; let timer: ReturnType<typeof setTimeout> | undefined; const poll = async () => { try { const job = await getJob(selected.id,ctl.signal); if (ctl.signal.aborted) return; setDetail(job); if (job.kind === 'project_export' && job.state === 'completed') { const project = scalar(job.context?.project_id); const exportId = scalar(job.publication_result?.export_id); if (project && exportId) { const nextMetadata = await exportMetadata(project,exportId,ctl.signal); if (!ctl.signal.aborted && detailCtl.current === ctl) setMetadata(nextMetadata); } } if (!ctl.signal.aborted && (!terminal.has(job.state) || (job.state === 'interrupted' && !job.publication_result && (!!job.result || !!job.coordinator_error)))) timer = setTimeout(poll,1000); } catch(e) { fail(e,ctl.signal); } }; void poll(); return () => { ctl.abort(); cancelCtl.current?.abort(); if (timer) clearTimeout(timer); }; }, [selected]);
+ const project = scalar(detail?.context?.project_id) || scalar(detail?.publication_result?.project_id); const canCancel = selected && detail && (!terminal.has(detail.state)) && (selected.kind === 'project_import' || (!!project && project === currentProjectId && !!writerHeaders()));
+ const cancel = async () => { if (!selected || !canCancel || cancelCtl.current) return; let headers: WriterHeaders | undefined; if (selected.kind !== 'project_import') { if (!project || project !== currentProjectId) return; const freshHeaders = writerHeaders(); if (!freshHeaders) return; headers = freshHeaders; } const ctl = new AbortController(); cancelCtl.current = ctl; try { const ok = await cancelJob(selected.id,ctl.signal,headers); if (!ctl.signal.aborted) setNotice(ok ? 'Запрос на отмену отправлен.' : 'Публикацию уже нельзя отменить.'); } catch(e) { fail(e,ctl.signal); } finally { if (cancelCtl.current === ctl) cancelCtl.current = null; } };
+ return <section><h2>Сохранённые задачи</h2><label>Проект<select value={scope} onChange={e => setScope(e.target.value)}><option value="all">Все проекты</option><option value="current" disabled={!currentProjectId}>Текущий проект</option></select></label><label>Состояние<select value={state} onChange={e => setState(e.target.value)}><option value="all">Все</option><option value="active">Активные</option><option value="terminal">Завершённые</option></select></label><button onClick={() => setRefresh(v => v+1)}>Обновить</button>{rows.map(row => <div key={row.id}><button onClick={() => setSelected(row)}>{row.label} — {states[row.state] ?? row.state}</button></div>)}{cursor && <button disabled={loading} onClick={() => void load(cursor)}>Показать ещё</button>}{error && <p role="alert">Ошибка: {error}</p>}{detail && selected && <div><p>{selected.label}: {states[detail.state] ?? detail.state}</p>{scalar(detail.progress) && <p>Прогресс: {scalar(detail.progress)}</p>}{scalar(detail.error) && <p>Ошибка: {scalar(detail.error)}</p>}{scalar(detail.coordinator_error) && <p>Ошибка: {scalar(detail.coordinator_error)}</p>}{detail.state === 'failed' && <p>Повторите операцию в соответствующей панели. Для загрузки снова выберите файл.</p>}{onRecover && detail.publication_result && detail.context?.project_id === currentProjectId && currentProjectId && (detail.kind === 'audio_import' || detail.kind === 'cover_import') && <button onClick={() => onRecover(detail.kind as 'audio_import' | 'cover_import', selected.id)}>Открыть подготовленный файл</button>}{project && <button onClick={() => callbacks.current.onOpenProject(project)}>Открыть проект</button>}{!terminal.has(detail.state) && (canCancel ? <button onClick={() => void cancel()}>Отменить задачу</button> : <p>Откройте проект для отмены задачи.</p>)}{notice && <p>{notice}</p>}{metadata && <div><p>Ревизия: {metadata.project_revision}</p>{metadata.site_check && <p>Проверка сайта: {metadata.site_check.passed ? 'успешно' : 'ошибка'}</p>}{metadata.server_folder && <p>Папка сервера: {metadata.server_folder}</p>}<a href={metadata.download_url} download>Скачать экспорт</a></div>}</div>}</section>;
+}
+

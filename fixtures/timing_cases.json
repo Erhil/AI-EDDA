@@ -1,0 +1,500 @@
+{
+  "schema_version": 1,
+  "profile": "ragnarock-edda-legacy-v1",
+  "provenance": "Independently hand-authored timing oracle. Not model output; not an in-game verification.",
+  "units": {
+    "beat_q": "quarter-note beats",
+    "time_sec": "seconds from decoded final OGG sample zero",
+    "global_beat": "time_sec * base_bpm / 60"
+  },
+  "validation_scope": "serializer_timing_only; not all cases satisfy the comfortable generation preset",
+  "numeric_tolerance_sec": 0.000001,
+  "cases": [
+    {
+      "id": "A_initial_offset",
+      "duration_sec": 12,
+      "base_bpm": 120,
+      "song_time_offset": 0,
+      "meter": {
+        "numerator": 4,
+        "denominator": 4,
+        "bar_origin_beat_q": 0
+      },
+      "segments": [
+        {
+          "start_time_sec": 0.25,
+          "start_beat_q": 0,
+          "bpm_quarter": 120,
+          "grid_division": 4,
+          "expected_global_beat": 0.5
+        }
+      ],
+      "notes": [
+        {
+          "beat_q": 0,
+          "expected_time_sec": 0.25,
+          "expected_global_beat": 0.5,
+          "lanes": [
+            0
+          ],
+          "expected_local_beat": 0,
+          "expected_rune_family": "whole"
+        },
+        {
+          "beat_q": 0.25,
+          "expected_time_sec": 0.375,
+          "expected_global_beat": 0.75,
+          "lanes": [
+            2
+          ],
+          "expected_local_beat": 0.25,
+          "expected_rune_family": "quarter_first"
+        },
+        {
+          "beat_q": 0.5,
+          "expected_time_sec": 0.5,
+          "expected_global_beat": 1,
+          "lanes": [
+            1
+          ],
+          "expected_local_beat": 0.5,
+          "expected_rune_family": "half"
+        },
+        {
+          "beat_q": 0.75,
+          "expected_time_sec": 0.625,
+          "expected_global_beat": 1.25,
+          "lanes": [
+            3
+          ],
+          "expected_local_beat": 0.75,
+          "expected_rune_family": "quarter_third"
+        },
+        {
+          "beat_q": 1,
+          "expected_time_sec": 0.75,
+          "expected_global_beat": 1.5,
+          "lanes": [
+            1
+          ],
+          "expected_local_beat": 1,
+          "expected_rune_family": "whole"
+        },
+        {
+          "beat_q": 4,
+          "expected_time_sec": 2.25,
+          "expected_global_beat": 4.5,
+          "lanes": [
+            1,
+            2
+          ],
+          "expected_local_beat": 4,
+          "expected_rune_family": "whole"
+        }
+      ],
+      "bookmarks": [
+        {
+          "time_sec": 0.25,
+          "expected_global_beat": 0.5,
+          "name": "First confirmed beat"
+        }
+      ]
+    },
+    {
+      "id": "B_tempo_change_120_to_90",
+      "duration_sec": 12,
+      "base_bpm": 120,
+      "song_time_offset": 0,
+      "meter": {
+        "numerator": 4,
+        "denominator": 4,
+        "bar_origin_beat_q": 0
+      },
+      "segments": [
+        {
+          "start_time_sec": 0.25,
+          "start_beat_q": 0,
+          "bpm_quarter": 120,
+          "grid_division": 4,
+          "expected_global_beat": 0.5
+        },
+        {
+          "start_time_sec": 4.25,
+          "start_beat_q": 8,
+          "bpm_quarter": 90,
+          "grid_division": 4,
+          "expected_global_beat": 8.5
+        }
+      ],
+      "notes": [
+        {
+          "beat_q": 0,
+          "expected_time_sec": 0.25,
+          "expected_global_beat": 0.5,
+          "lanes": [
+            0
+          ],
+          "expected_local_beat": 0,
+          "expected_rune_family": "whole"
+        },
+        {
+          "beat_q": 7.5,
+          "expected_time_sec": 4,
+          "expected_global_beat": 8,
+          "lanes": [
+            2
+          ],
+          "expected_local_beat": 7.5,
+          "expected_rune_family": "half"
+        },
+        {
+          "beat_q": 8,
+          "expected_time_sec": 4.25,
+          "expected_global_beat": 8.5,
+          "lanes": [
+            0
+          ],
+          "expected_local_beat": 0,
+          "expected_rune_family": "whole"
+        },
+        {
+          "beat_q": 8.25,
+          "expected_time_sec": 4.416666666666667,
+          "expected_time_fraction": "53/12",
+          "expected_global_beat": 8.833333333333334,
+          "expected_global_fraction": "53/6",
+          "lanes": [
+            2
+          ],
+          "expected_local_beat": 0.25,
+          "expected_rune_family": "quarter_first"
+        },
+        {
+          "beat_q": 8.5,
+          "expected_time_sec": 4.583333333333333,
+          "expected_time_fraction": "55/12",
+          "expected_global_beat": 9.166666666666666,
+          "expected_global_fraction": "55/6",
+          "lanes": [
+            1
+          ],
+          "expected_local_beat": 0.5,
+          "expected_rune_family": "half"
+        },
+        {
+          "beat_q": 9,
+          "expected_time_sec": 4.916666666666667,
+          "expected_time_fraction": "59/12",
+          "expected_global_beat": 9.833333333333334,
+          "expected_global_fraction": "59/6",
+          "lanes": [
+            3
+          ],
+          "expected_local_beat": 1,
+          "expected_rune_family": "whole"
+        },
+        {
+          "beat_q": 10,
+          "expected_time_sec": 5.583333333333333,
+          "expected_time_fraction": "67/12",
+          "expected_global_beat": 11.166666666666666,
+          "expected_global_fraction": "67/6",
+          "lanes": [
+            0
+          ],
+          "expected_local_beat": 2,
+          "expected_rune_family": "whole"
+        },
+        {
+          "beat_q": 12,
+          "expected_time_sec": 6.916666666666667,
+          "expected_time_fraction": "83/12",
+          "expected_global_beat": 13.833333333333334,
+          "expected_global_fraction": "83/6",
+          "lanes": [
+            2
+          ],
+          "expected_local_beat": 4,
+          "expected_rune_family": "whole"
+        }
+      ],
+      "bookmarks": [
+        {
+          "time_sec": 4.25,
+          "expected_global_beat": 8.5,
+          "name": "Tempo 90 BPM"
+        }
+      ]
+    },
+    {
+      "id": "C_same_bpm_subdivision_change",
+      "duration_sec": 12,
+      "base_bpm": 120,
+      "song_time_offset": 0,
+      "purpose": "Preserve a same-BPM marker that changes grid division; triplet serialization coverage only.",
+      "meter": {
+        "numerator": 4,
+        "denominator": 4,
+        "bar_origin_beat_q": 0
+      },
+      "segments": [
+        {
+          "start_time_sec": 0.25,
+          "start_beat_q": 0,
+          "bpm_quarter": 120,
+          "grid_division": 4,
+          "expected_global_beat": 0.5
+        },
+        {
+          "start_time_sec": 2.25,
+          "start_beat_q": 4,
+          "bpm_quarter": 120,
+          "grid_division": 6,
+          "expected_global_beat": 4.5
+        }
+      ],
+      "notes": [
+        {
+          "beat_q": 4,
+          "expected_time_sec": 2.25,
+          "expected_global_beat": 4.5,
+          "lanes": [
+            0
+          ],
+          "expected_local_beat": 0,
+          "expected_rune_family": "whole"
+        },
+        {
+          "beat_q": 4.166666666666667,
+          "beat_q_fraction": "25/6",
+          "expected_time_sec": 2.3333333333333335,
+          "expected_time_fraction": "7/3",
+          "expected_global_beat": 4.666666666666667,
+          "expected_global_fraction": "14/3",
+          "lanes": [
+            2
+          ],
+          "expected_local_beat": 0.16666666666666666,
+          "expected_rune_family": "third_b"
+        },
+        {
+          "beat_q": 4.333333333333333,
+          "beat_q_fraction": "13/3",
+          "expected_time_sec": 2.4166666666666665,
+          "expected_time_fraction": "29/12",
+          "expected_global_beat": 4.833333333333333,
+          "expected_global_fraction": "29/6",
+          "lanes": [
+            1
+          ],
+          "expected_local_beat": 0.3333333333333333,
+          "expected_rune_family": "third_a"
+        },
+        {
+          "beat_q": 4.5,
+          "expected_time_sec": 2.5,
+          "expected_global_beat": 5,
+          "lanes": [
+            3
+          ],
+          "expected_local_beat": 0.5,
+          "expected_rune_family": "half"
+        },
+        {
+          "beat_q": 4.666666666666667,
+          "beat_q_fraction": "14/3",
+          "expected_time_sec": 2.5833333333333335,
+          "expected_time_fraction": "31/12",
+          "expected_global_beat": 5.166666666666667,
+          "expected_global_fraction": "31/6",
+          "lanes": [
+            0
+          ],
+          "expected_local_beat": 0.6666666666666666,
+          "expected_rune_family": "third_b"
+        },
+        {
+          "beat_q": 4.833333333333333,
+          "beat_q_fraction": "29/6",
+          "expected_time_sec": 2.6666666666666665,
+          "expected_time_fraction": "8/3",
+          "expected_global_beat": 5.333333333333333,
+          "expected_global_fraction": "16/3",
+          "lanes": [
+            2
+          ],
+          "expected_local_beat": 0.8333333333333334,
+          "expected_rune_family": "third_a"
+        },
+        {
+          "beat_q": 5,
+          "expected_time_sec": 2.75,
+          "expected_global_beat": 5.5,
+          "lanes": [
+            1
+          ],
+          "expected_local_beat": 1,
+          "expected_rune_family": "whole"
+        }
+      ],
+      "bookmarks": []
+    },
+    {
+      "id": "D_pickup_before_first_bar",
+      "duration_sec": 12,
+      "base_bpm": 120,
+      "song_time_offset": 0,
+      "meter": {
+        "numerator": 4,
+        "denominator": 4,
+        "bar_origin_beat_q": 0
+      },
+      "expected_first_bar_time_sec": 1.25,
+      "segments": [
+        {
+          "start_time_sec": 0.25,
+          "start_beat_q": -2,
+          "bpm_quarter": 120,
+          "grid_division": 4,
+          "expected_global_beat": 0.5
+        }
+      ],
+      "notes": [
+        {
+          "beat_q": -2,
+          "expected_time_sec": 0.25,
+          "expected_global_beat": 0.5,
+          "lanes": [
+            0
+          ],
+          "expected_local_beat": 0,
+          "expected_rune_family": "whole"
+        },
+        {
+          "beat_q": -1,
+          "expected_time_sec": 0.75,
+          "expected_global_beat": 1.5,
+          "lanes": [
+            2
+          ],
+          "expected_local_beat": 1,
+          "expected_rune_family": "whole"
+        },
+        {
+          "beat_q": -0.5,
+          "expected_time_sec": 1,
+          "expected_global_beat": 2,
+          "lanes": [
+            1
+          ],
+          "expected_local_beat": 1.5,
+          "expected_rune_family": "half"
+        },
+        {
+          "beat_q": 0,
+          "expected_time_sec": 1.25,
+          "expected_global_beat": 2.5,
+          "lanes": [
+            3
+          ],
+          "expected_local_beat": 2,
+          "expected_rune_family": "whole"
+        }
+      ],
+      "bookmarks": [
+        {
+          "time_sec": 1.25,
+          "expected_global_beat": 2.5,
+          "name": "First complete bar"
+        }
+      ]
+    }
+  ],
+  "invalid_cases": [
+    {
+      "id": "phase_jump_in_continuous_grid",
+      "segments": [
+        {
+          "start_time_sec": 0.25,
+          "start_beat_q": 0,
+          "bpm_quarter": 120,
+          "grid_division": 4
+        },
+        {
+          "start_time_sec": 2.35,
+          "start_beat_q": 4,
+          "bpm_quarter": 120,
+          "grid_division": 4
+        }
+      ],
+      "expected_continuous_second_marker_time_sec": 2.25,
+      "expected_error_code": "GRID_DISCONTINUITY"
+    },
+    {
+      "id": "note_before_first_marker",
+      "segments": [
+        {
+          "start_time_sec": 0.25,
+          "start_beat_q": 0,
+          "bpm_quarter": 120,
+          "grid_division": 4
+        }
+      ],
+      "note": {
+        "final_time_sec": 0.125,
+        "beat_q": -0.25,
+        "lane": 0
+      },
+      "expected_error_code": "GRID_NOT_COVERING_NOTES"
+    },
+    {
+      "id": "lane_outside_four_drums",
+      "note": {
+        "final_time_sec": 0.25,
+        "beat_q": 0,
+        "lane": 4
+      },
+      "expected_error_code": "EXPORT_INVALID",
+      "expected_detail": "lane must be an integer from 0 through 3"
+    },
+    {
+      "id": "zero_bpm",
+      "segment": {
+        "start_time_sec": 0.25,
+        "start_beat_q": 0,
+        "bpm_quarter": 0,
+        "grid_division": 4
+      },
+      "expected_error_code": "EXPORT_INVALID",
+      "expected_detail": "bpm_quarter must be finite and positive"
+    },
+    {
+      "id": "duplicate_lane_and_time",
+      "notes": [
+        {
+          "final_time_sec": 0.25,
+          "lane": 1
+        },
+        {
+          "final_time_sec": 0.25,
+          "lane": 1
+        }
+      ],
+      "expected_error_code": "EXPORT_INVALID",
+      "expected_detail": "duplicate lane/time"
+    },
+    {
+      "id": "missing_final_audio",
+      "assets_present": [
+        "info.dat",
+        "Easy.dat",
+        "cover.jpg"
+      ],
+      "expected_error_code": "EXPORT_INVALID",
+      "expected_detail": "referenced song.ogg is absent"
+    }
+  ],
+  "non_json_negative_tests": [
+    "Pass NaN and Infinity as Python float values; domain validation must reject them before JSON serialization."
+  ]
+}

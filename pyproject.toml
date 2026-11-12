@@ -1,0 +1,67 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ai-edda"
+version = "0.1.0"
+license = "GPL-3.0-only"
+license-files = ["LICENSE"]
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "pydantic",
+    "typer",
+    "beat-this==1.1.0",
+    "numpy",
+    "scipy",
+    "librosa==1.0.0",
+    "soundfile==0.13.1",
+    "soxr",
+    "Pillow",
+    "psutil",
+    "cryptography>=50.0.2",
+]
+
+[project.scripts]
+ai-edda = "ai_edda.cli:app"
+
+[dependency-groups]
+dev = ["pytest", "httpx", "ruff"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ai_edda"]
+
+[tool.hatch.build.targets.wheel.force-include]
+'src/ai_edda/static' = 'ai_edda/static'
+[project.optional-dependencies]
+cuda = ["torch==2.11.0", "torchaudio==2.11.0"]
+cpu = ["torch==2.11.0", "torchaudio==2.11.0"]
+
+[tool.uv]
+conflicts = [[{ extra = "cpu" }, { extra = "cuda" }]]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+include = ["src/**/*.py", "src/**/*.pyi", "tests/**/*.py", "tests/**/*.pyi", "scripts/**/*.py", "scripts/**/*.pyi"]
+extend-exclude = ["docs/scratch", "src/scratch", ".agents", "web", ".venv", "venv", "build", "dist", "tmp", "temp"]
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I"]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu128", extra = "cuda" }, { index = "pytorch-cpu", extra = "cpu" }]
+torchaudio = [{ index = "pytorch-cu128", extra = "cuda" }, { index = "pytorch-cpu", extra = "cpu" }]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+

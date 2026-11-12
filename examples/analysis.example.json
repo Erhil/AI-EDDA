@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "example_only": true,
+  "source_model_output": false,
+  "description": "Illustrative DTO excerpt for design 2.0. Hand-authored values, no real inference, no complete persisted project or checkpoint hashes.",
+  "audio_context": {
+    "duration_sec": 12,
+    "sample_rate": 48000,
+    "channels": 2,
+    "frame_count": 576000
+  },
+  "rhythm_analysis_excerpt": {
+    "id": "illustrative-analysis",
+    "inference_performed": false,
+    "beat_times_sec": [
+      0.27,
+      0.76,
+      1.24,
+      1.76,
+      2.25
+    ],
+    "downbeat_times_sec": [
+      0.27,
+      2.25
+    ],
+    "onsets": [
+      {
+        "id": "onset-1",
+        "audio_time_sec": 0.252,
+        "salience_score": 0.82,
+        "source": "hand_authored_illustration",
+        "sample_index": 12096,
+        "sample_rate": 48000
+      }
+    ]
+  },
+  "timing_grid": {
+    "revision": 2,
+    "review_state": "accepted",
+    "segments": [
+      {
+        "start_time_sec": 0.25,
+        "start_beat_q": 0,
+        "bpm_quarter": 120,
+        "grid_division": 4,
+        "origin": "manual",
+        "review_state": "accepted"
+      }
+    ],
+    "meter_regions": [
+      {
+        "numerator": 4,
+        "denominator": 4,
+        "bar_origin_beat_q": 0
+      }
+    ],
+    "anchors": [
+      {
+        "id": "anchor-1",
+        "audio_time_sec": 0.25,
+        "beat_q": 0,
+        "origin": "manual",
+        "user_fixed": true
+      }
+    ]
+  },
+  "musical_plan_excerpt": {
+    "id": "plan-example",
+    "revision": 1,
+    "analysis_id": "illustrative-analysis",
+    "grid_revision": 2,
+    "sections": [
+      {
+        "id": "whole-song",
+        "start_q": 0,
+        "end_q": 23.5
+      }
+    ],
+    "motif_links": [],
+    "rhythm_sites": [
+      {
+        "id": "site-1",
+        "beat_q": 0,
+        "grid_time_sec": 0.25,
+        "candidate_ids": [
+          "onset-1"
+        ],
+        "residual_ms": 2,
+        "metric_role": "bar_start"
+      }
+    ]
+  },
+  "chart_excerpt": {
+    "id": "chart-example",
+    "revision": 3,
+    "grid_revision": 2,
+    "review": "needs_review",
+    "intended_rank": 3,
+    "events": [
+      {
+        "id": "event-1",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 0,
+          "micro_offset_sec": 0
+        },
+        "notes": [
+          {
+            "id": "note-1",
+            "lane": 1,
+            "hand_hint": "left",
+            "provenance": {
+              "created_by": "manual",
+              "operation_id": "fixture-authoring",
+              "source_ids": [],
+              "fixture_label": "synthetic_fixture"
+            },
+            "locks": {}
+          }
+        ],
+        "provenance": {
+          "created_by": "manual",
+          "operation_id": "fixture-authoring",
+          "source_ids": [
+            "onset-1"
+          ],
+          "fixture_label": "synthetic_fixture"
+        },
+        "locks": {}
+      }
+    ],
+    "expected_projected_time_sec": 0.25
+  },
+  "offline_preview_excerpt": {
+    "source_start_sample": 48000,
+    "sample_rate": 48000,
+    "frame_count": 192000,
+    "grid_revision": 2,
+    "chart_revision": 3,
+    "local_player_time_sec": 0.5,
+    "expected_project_time_sec": 1.5
+  },
+  "browser_transport_example": {
+    "source_start_sec": 1,
+    "context_start_sec": 10,
+    "playback_rate": 1,
+    "note_project_time_sec": 1.5,
+    "expected_note_context_time_sec": 10.5,
+    "context_now_sec": 10.5,
+    "expected_project_playhead_sec": 1.5
+  }
+}

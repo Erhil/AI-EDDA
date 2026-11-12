@@ -1,0 +1,3 @@
+.waveform-surface { position: relative; height: 96px; cursor: pointer; overflow: hidden; }
+.waveform-loop { position: absolute; top: 0; bottom: 0; background: rgba(122, 162, 247, .18); pointer-events: none; }
+.waveform-position { position: absolute; top: 0; bottom: 0; width: 2px; background: #fff; pointer-events: none; }

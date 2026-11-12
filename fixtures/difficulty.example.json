@@ -1,0 +1,73 @@
+{
+  "_version": "1",
+  "_customData": {
+    "_time": 0,
+    "_BPMChanges": [
+      {
+        "_time": 0.5,
+        "_BPM": 120,
+        "_beatsPerBar": 4,
+        "_metronomeOffset": 4
+      }
+    ],
+    "_bookmarks": [
+      {
+        "_time": 0.5,
+        "_name": "First confirmed beat"
+      }
+    ]
+  },
+  "_events": [],
+  "_notes": [
+    {
+      "_time": 0.5,
+      "_lineIndex": 0,
+      "_lineLayer": 1,
+      "_type": 0,
+      "_cutDirection": 1
+    },
+    {
+      "_time": 0.75,
+      "_lineIndex": 2,
+      "_lineLayer": 1,
+      "_type": 0,
+      "_cutDirection": 1
+    },
+    {
+      "_time": 1,
+      "_lineIndex": 1,
+      "_lineLayer": 1,
+      "_type": 0,
+      "_cutDirection": 1
+    },
+    {
+      "_time": 1.25,
+      "_lineIndex": 3,
+      "_lineLayer": 1,
+      "_type": 0,
+      "_cutDirection": 1
+    },
+    {
+      "_time": 1.5,
+      "_lineIndex": 1,
+      "_lineLayer": 1,
+      "_type": 0,
+      "_cutDirection": 1
+    },
+    {
+      "_time": 4.5,
+      "_lineIndex": 1,
+      "_lineLayer": 1,
+      "_type": 0,
+      "_cutDirection": 1
+    },
+    {
+      "_time": 4.5,
+      "_lineIndex": 2,
+      "_lineLayer": 1,
+      "_type": 0,
+      "_cutDirection": 1
+    }
+  ],
+  "_obstacles": []
+}

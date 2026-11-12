@@ -1,0 +1,50 @@
+{
+  "_version": "1",
+  "_songName": "Timing Fixture",
+  "_songSubName": "",
+  "_songAuthorName": "Synthetic test",
+  "_levelAuthorName": "Ragma prototype",
+  "_explicit": "false",
+  "_beatsPerMinute": 120,
+  "_shuffle": 0,
+  "_shufflePeriod": 0.5,
+  "_previewStartTime": 0,
+  "_previewDuration": 0,
+  "_songApproximativeDuration": 12,
+  "_songFilename": "song.ogg",
+  "_coverImageFilename": "cover.jpg",
+  "_environmentName": "Midgard",
+  "_songTimeOffset": 0,
+  "_customData": {
+    "_contributors": [],
+    "_editors": {
+      "Ragma": {
+        "version": "0.1.0"
+      },
+      "_lastEditedBy": "Ragma"
+    }
+  },
+  "_difficultyBeatmapSets": [
+    {
+      "_beatmapCharacteristicName": "Standard",
+      "_difficultyBeatmaps": [
+        {
+          "_difficulty": "Easy",
+          "_difficultyRank": 5,
+          "_beatmapFilename": "Easy.dat",
+          "_noteJumpMovementSpeed": 15,
+          "_noteJumpStartBeatOffset": 0,
+          "_customData": {
+            "_editorOldOffset": 0,
+            "_editorGridSpacing": 2,
+            "_editorGridDivision": 4,
+            "_warnings": [],
+            "_information": [],
+            "_suggestions": [],
+            "_requirements": []
+          }
+        }
+      ]
+    }
+  ]
+}

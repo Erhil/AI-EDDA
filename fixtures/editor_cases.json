@@ -1,0 +1,498 @@
+{
+  "schema_version": 1,
+  "example_only": true,
+  "description": "Numerical contract oracles. No runtime editor or validator execution is claimed.",
+  "original_grid": {
+    "revision": 2,
+    "start_time_sec": 0.25,
+    "start_beat_q": 0,
+    "bpm_quarter": 120
+  },
+  "timing_changes": [
+    {
+      "id": "ordinary_bpm_edit",
+      "new_grid": {
+        "revision": 3,
+        "start_time_sec": 0.25,
+        "start_beat_q": 0,
+        "bpm_quarter": 90
+      },
+      "cases": [
+        {
+          "time_ref": {
+            "kind": "beat",
+            "beat_q": 4,
+            "micro_offset_sec": 0
+          },
+          "expected_time_sec": 2.9166666666666665,
+          "expected_time_fraction": "35/12"
+        },
+        {
+          "time_ref": {
+            "kind": "beat",
+            "beat_q": 4,
+            "micro_offset_sec": 0.012
+          },
+          "expected_time_sec": 2.9286666666666665
+        },
+        {
+          "time_ref": {
+            "kind": "audio",
+            "time_sec": 2.25
+          },
+          "expected_time_sec": 2.25
+        }
+      ]
+    },
+    {
+      "id": "double_tempo_reinterpretation",
+      "scale": 2,
+      "pivot_beat_q": 0,
+      "new_grid": {
+        "revision": 3,
+        "start_time_sec": 0.25,
+        "start_beat_q": 0,
+        "bpm_quarter": 240
+      },
+      "cases": [
+        {
+          "before": {
+            "kind": "beat",
+            "beat_q": 4,
+            "micro_offset_sec": 0
+          },
+          "after": {
+            "kind": "beat",
+            "beat_q": 8,
+            "micro_offset_sec": 0
+          },
+          "expected_before_sec": 2.25,
+          "expected_after_sec": 2.25
+        },
+        {
+          "before": {
+            "kind": "beat",
+            "beat_q": 4,
+            "micro_offset_sec": 0.012
+          },
+          "after": {
+            "kind": "beat",
+            "beat_q": 8,
+            "micro_offset_sec": 0.012
+          },
+          "expected_before_sec": 2.262,
+          "expected_after_sec": 2.262
+        },
+        {
+          "before": {
+            "kind": "audio",
+            "time_sec": 2.25
+          },
+          "after": {
+            "kind": "audio",
+            "time_sec": 2.25
+          },
+          "expected_before_sec": 2.25,
+          "expected_after_sec": 2.25
+        }
+      ]
+    }
+  ],
+  "span_membership": {
+    "range_q": {
+      "start_q": 4,
+      "end_q": 8
+    },
+    "expected_start_sec": 2.25,
+    "expected_end_sec": 4.25,
+    "events": [
+      {
+        "id": "before_by_micro_offset",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 4,
+          "micro_offset_sec": -0.01
+        },
+        "expected_time_sec": 2.24,
+        "expected_inside": false
+      },
+      {
+        "id": "after_start",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 4,
+          "micro_offset_sec": 0.01
+        },
+        "expected_time_sec": 2.26,
+        "expected_inside": true
+      },
+      {
+        "id": "inside_before_end",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 8,
+          "micro_offset_sec": -0.01
+        },
+        "expected_time_sec": 4.24,
+        "expected_inside": true
+      },
+      {
+        "id": "exact_end",
+        "time_ref": {
+          "kind": "audio",
+          "time_sec": 4.25
+        },
+        "expected_time_sec": 4.25,
+        "expected_inside": false
+      }
+    ]
+  },
+  "protected_regeneration": {
+    "range_q": {
+      "start_q": 4,
+      "end_q": 8
+    },
+    "base_chart_revision": 5,
+    "base_events": [
+      {
+        "id": "outside_before",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 0,
+          "micro_offset_sec": 0
+        },
+        "notes": [
+          {
+            "id": "outside_before-n0",
+            "lane": 0
+          }
+        ],
+        "provenance": {
+          "created_by": "manual",
+          "operation_id": "fixture-authoring",
+          "source_ids": [],
+          "fixture_label": "hand_authored_fixture"
+        },
+        "locks": {}
+      },
+      {
+        "id": "locked_double",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 4,
+          "micro_offset_sec": 0
+        },
+        "notes": [
+          {
+            "id": "locked_double-n0",
+            "lane": 1,
+            "locks": {
+              "existence": true,
+              "lane": true
+            }
+          },
+          {
+            "id": "locked_double-n1",
+            "lane": 2,
+            "locks": {
+              "existence": true,
+              "lane": true
+            }
+          }
+        ],
+        "provenance": {
+          "created_by": "manual",
+          "operation_id": "fixture-authoring",
+          "source_ids": [],
+          "fixture_label": "hand_authored_fixture"
+        },
+        "locks": {
+          "existence": true,
+          "time": true,
+          "membership": true
+        }
+      },
+      {
+        "id": "replaceable",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 6,
+          "micro_offset_sec": 0
+        },
+        "notes": [
+          {
+            "id": "replaceable-n0",
+            "lane": 3
+          }
+        ],
+        "provenance": {
+          "created_by": "manual",
+          "operation_id": "fixture-authoring",
+          "source_ids": [],
+          "fixture_label": "hand_authored_fixture"
+        },
+        "locks": {}
+      },
+      {
+        "id": "outside_after",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 8,
+          "micro_offset_sec": 0
+        },
+        "notes": [
+          {
+            "id": "outside_after-n0",
+            "lane": 2
+          }
+        ],
+        "provenance": {
+          "created_by": "manual",
+          "operation_id": "fixture-authoring",
+          "source_ids": [],
+          "fixture_label": "hand_authored_fixture"
+        },
+        "locks": {}
+      }
+    ],
+    "candidate_span_events": [
+      {
+        "id": "locked_double",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 4,
+          "micro_offset_sec": 0
+        },
+        "notes": [
+          {
+            "id": "locked_double-n0",
+            "lane": 1,
+            "locks": {
+              "existence": true,
+              "lane": true
+            }
+          },
+          {
+            "id": "locked_double-n1",
+            "lane": 2,
+            "locks": {
+              "existence": true,
+              "lane": true
+            }
+          }
+        ],
+        "provenance": {
+          "created_by": "manual",
+          "operation_id": "fixture-authoring",
+          "source_ids": [],
+          "fixture_label": "hand_authored_fixture"
+        },
+        "locks": {
+          "existence": true,
+          "time": true,
+          "membership": true
+        }
+      },
+      {
+        "id": "replacement",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 5.5,
+          "micro_offset_sec": 0
+        },
+        "notes": [
+          {
+            "id": "replacement-n0",
+            "lane": 0
+          }
+        ],
+        "provenance": {
+          "created_by": "manual",
+          "operation_id": "fixture-authoring",
+          "source_ids": [],
+          "fixture_label": "hand_authored_fixture"
+        },
+        "locks": {}
+      }
+    ],
+    "expected_full_event_ids": [
+      "outside_before",
+      "locked_double",
+      "replacement",
+      "outside_after"
+    ],
+    "expected_unchanged_event_ids": [
+      "outside_before",
+      "locked_double",
+      "outside_after"
+    ],
+    "expected_deleted_event_ids": [
+      "replaceable"
+    ],
+    "undo_expected_event_ids": [
+      "outside_before",
+      "locked_double",
+      "replaceable",
+      "outside_after"
+    ]
+  },
+  "stale_generation": {
+    "request_chart_revision": 5,
+    "current_chart_revision": 6,
+    "expected_error": "STALE_REVISION",
+    "expected_chart_unchanged": true
+  },
+  "simultaneous_across_events": {
+    "events": [
+      {
+        "id": "double",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 4,
+          "micro_offset_sec": 0
+        },
+        "notes": [
+          {
+            "id": "double-n0",
+            "lane": 0
+          },
+          {
+            "id": "double-n1",
+            "lane": 2
+          }
+        ],
+        "provenance": {
+          "created_by": "manual",
+          "operation_id": "fixture-authoring",
+          "source_ids": [],
+          "fixture_label": "hand_authored_fixture"
+        },
+        "locks": {}
+      },
+      {
+        "id": "third",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 4,
+          "micro_offset_sec": 0
+        },
+        "notes": [
+          {
+            "id": "third-n0",
+            "lane": 1
+          }
+        ],
+        "provenance": {
+          "created_by": "manual",
+          "operation_id": "fixture-authoring",
+          "source_ids": [],
+          "fixture_label": "hand_authored_fixture"
+        },
+        "locks": {}
+      }
+    ],
+    "expected_profile_error": "EXPORT_INVALID",
+    "expected_total_at_time": 3
+  },
+  "provenance_after_manual_edit": {
+    "automation_history": {
+      "generated_notes_ever_applied": true
+    },
+    "expected_automated_map_disclosure": true,
+    "current_note_created_by": "manual"
+  },
+  "partial_lock_regeneration": {
+    "description": "Time lock implies event existence; retained note lane lock implies note existence. Membership remains editable.",
+    "range_q": {
+      "start_q": 4,
+      "end_q": 8
+    },
+    "base_events": [
+      {
+        "id": "partial-event",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 4,
+          "micro_offset_sec": 0
+        },
+        "notes": [
+          {
+            "id": "retained-note",
+            "lane": 1,
+            "locks": {
+              "lane": true
+            }
+          }
+        ],
+        "provenance": {
+          "created_by": "manual",
+          "operation_id": "fixture-authoring",
+          "source_ids": []
+        },
+        "locks": {
+          "time": true
+        }
+      }
+    ],
+    "candidate_span_events": [
+      {
+        "id": "partial-event",
+        "time_ref": {
+          "kind": "beat",
+          "beat_q": 4,
+          "micro_offset_sec": 0
+        },
+        "notes": [
+          {
+            "id": "retained-note",
+            "lane": 1,
+            "locks": {
+              "lane": true
+            }
+          },
+          {
+            "id": "new-note",
+            "lane": 2,
+            "locks": {},
+            "provenance": {
+              "created_by": "generated",
+              "operation_id": "fixture-generation",
+              "source_ids": [],
+              "generation_run_id": "fixture-run"
+            }
+          }
+        ],
+        "provenance": {
+          "created_by": "manual",
+          "operation_id": "fixture-authoring",
+          "source_ids": []
+        },
+        "locks": {
+          "time": true
+        }
+      }
+    ],
+    "expected_full_event_ids": [
+      "partial-event"
+    ],
+    "expected_note_ids": [
+      "retained-note",
+      "new-note"
+    ],
+    "expected_event_count": 1
+  },
+  "fragment_transport": {
+    "sample_rate": 48000,
+    "source_start_sample": 480000,
+    "frame_count": 480000,
+    "project_start_sec": 12,
+    "playback_rate": 0.5,
+    "context_start_sec": 100,
+    "note_project_time_sec": 13,
+    "context_now_sec": 102,
+    "expected_buffer_origin_sec": 10,
+    "expected_buffer_offset_sec": 2,
+    "expected_note_context_time_sec": 102,
+    "expected_project_playhead_sec": 13
+  }
+}

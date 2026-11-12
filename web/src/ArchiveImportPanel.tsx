@@ -1,0 +1,29 @@
+import { useEffect, useRef, useState } from 'react';
+import { ApiError } from './api';
+import { uploadProjectArchive, getImportJob, cancelImportJob, type ArchiveKind, type ImportJob } from './archiveClient';
+
+type Props = { onComplete: () => void; onOpen: (id: string) => void; onSessionLost?: () => void };
+export default function ArchiveImportPanel(props: Props) {
+  const callbacks = useRef(props); callbacks.current = props;
+  const [kind, setKind] = useState<ArchiveKind>('native'); const [file, setFile] = useState<File | null>(null);
+  const [locked, setLocked] = useState(false); const [uploading, setUploading] = useState(false);
+  const [progress, setProgress] = useState<[number, number] | null>(null); const [jobId, setJobId] = useState('');
+  const [job, setJob] = useState<ImportJob | null>(null); const [error, setError] = useState('');
+  const op = useRef(0); const controllers = useRef(new Set<AbortController>()); const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const request = useRef<{ id: string; kind: ArchiveKind; file: File } | null>(null); const busy = useRef(false);
+  const clear = () => { op.current++; if (timer.current) clearTimeout(timer.current); timer.current = null; controllers.current.forEach(c => c.abort()); controllers.current.clear(); busy.current = false; };
+  useEffect(() => () => clear(), []);
+  const newController = () => { const c = new AbortController(); controllers.current.add(c); return c; };
+  const report = (e: unknown) => { if (e instanceof ApiError && e.status === 401) callbacks.current.onSessionLost?.(); else setError('Не удалось выполнить запрос. Повторите попытку.'); };
+  const poll = (id: string, token: number) => {
+    const run = async () => { const c = newController(); try { const next = await getImportJob(id, c.signal); if (token !== op.current) return; setJob(next); setError(''); if (next.publication_result) { callbacks.current.onComplete(); return; } if (!['failed', 'cancelled', 'interrupted', 'completed'].includes(next.state)) timer.current = setTimeout(run, 1000); } catch (e) { if (token !== op.current || c.signal.aborted) return; report(e); timer.current = setTimeout(run, 1000); } finally { controllers.current.delete(c); } }; void run();
+  };
+  const upload = async () => { if (busy.current) return; if (!request.current) { if (!file) return; request.current = { id: crypto.randomUUID(), kind, file }; } const selected = request.current; busy.current = true; setLocked(true); setUploading(true); setJob(null); setJobId(''); setError(''); setProgress([0, selected.file.size]); const token = op.current; const c = newController();
+    try { const result = await uploadProjectArchive(selected.kind, selected.id, selected.file, (a, b) => { if (token === op.current) setProgress([a, b]); }, c.signal); if (token !== op.current) return; setJobId(result.job_id); poll(result.job_id, token); }
+    catch (e) { if (token !== op.current) return; const detail = e instanceof ApiError ? e.detail : null; if (e instanceof ApiError && e.status === 409 && detail && typeof detail === 'object' && 'code' in detail && detail.code === 'IMPORT_IN_PROGRESS' && 'job_id' in detail && typeof detail.job_id === 'string') { setJobId(detail.job_id); poll(detail.job_id, token); } else if (c.signal.aborted) setError('Загрузка отменена. Можно повторить.'); else report(e); }
+    finally { controllers.current.delete(c); if (token === op.current) { busy.current = false; setUploading(false); } }
+  };
+  const reset = () => { clear(); request.current = null; setLocked(false); setUploading(false); setFile(null); setJobId(''); setJob(null); setProgress(null); setError(''); };
+  const terminal = job && ['failed', 'interrupted', 'cancelled', 'completed'].includes(job.state); const result = job?.publication_result;
+  return <section><h2>Импорт архива</h2><label>Тип архива<select disabled={locked} value={kind} onChange={e => setKind(e.target.value as ArchiveKind)}><option value="native">Резервная копия проекта</option><option value="game">Ragnarock ZIP</option></select></label><input aria-label="Архив ZIP" type="file" accept=".zip" disabled={locked} onChange={e => { const f = e.target.files?.[0]; if (f && (!/\.zip$/i.test(f.name) || f.size < 1 || f.size > 1024 ** 3)) { setFile(null); setError('Выберите ZIP размером не более 1 ГиБ.'); } else { setFile(f ?? null); setError(''); } }}/>{file && <p>{file.name}</p>}{!locked && <button disabled={!file} onClick={() => void upload()}>Импортировать</button>}{uploading && <p>Загружено: {progress?.[0]} / {progress?.[1]} байт <button onClick={() => controllers.current.forEach(c => c.abort())}>Отменить загрузку</button></p>}{jobId && !result && <p>Обработка: {job?.state ?? 'ожидание'} {!terminal && <button onClick={() => { const token = op.current; const c = newController(); void cancelImportJob(jobId, c.signal).then(ok => { if (token === op.current && !ok) setError('Публикацию уже нельзя отменить.'); }).catch(e => { if (token === op.current && !c.signal.aborted) report(e); }).finally(() => controllers.current.delete(c)); }}>Отменить обработку</button>}</p>}{job?.error != null && <p role="alert">{JSON.stringify(job.error).includes('PROJECT_EXISTS') ? 'Проект уже существует. Выберите его в списке проектов.' : `Ошибка обработки: ${JSON.stringify(job.error)}`}</p>}{job?.coordinator_error != null && <p role="alert">Ошибка координатора: {JSON.stringify(job.coordinator_error)}</p>}{result && <><p>Импорт завершён. Ревизия: {result.revision}.</p><button onClick={() => callbacks.current.onOpen(result.project_id)}>Открыть проект</button></>}{locked && !uploading && !result && (!jobId || terminal) && <button onClick={() => void upload()}>Повторить</button>}{locked && <button onClick={reset}>Новый импорт</button>}{error && <p role="alert">{error}</p>}</section>;
+}

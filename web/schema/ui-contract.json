@@ -1,0 +1,1793 @@
+{
+  "$defs": {
+    "ArrangementRangeQ": {
+      "additionalProperties": false,
+      "properties": {
+        "start_q": {
+          "title": "Start Q",
+          "type": "number"
+        },
+        "end_q": {
+          "title": "End Q",
+          "type": "number"
+        }
+      },
+      "required": [
+        "start_q",
+        "end_q"
+      ],
+      "title": "ArrangementRangeQ",
+      "type": "object"
+    },
+    "ArrangementRequest": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "project_id": {
+          "minLength": 1,
+          "title": "Project Id",
+          "type": "string"
+        },
+        "generator_id": {
+          "minLength": 1,
+          "title": "Generator Id",
+          "type": "string"
+        },
+        "generator_version": {
+          "minLength": 1,
+          "title": "Generator Version",
+          "type": "string"
+        },
+        "audio_asset_id": {
+          "minLength": 1,
+          "title": "Audio Asset Id",
+          "type": "string"
+        },
+        "audio_sha256": {
+          "pattern": "^[0-9a-fA-F]{64}$",
+          "title": "Audio Sha256",
+          "type": "string"
+        },
+        "analysis": {
+          "$ref": "#/$defs/StrictObjectRef"
+        },
+        "plan": {
+          "$ref": "#/$defs/StrictObjectRef"
+        },
+        "grid_revision": {
+          "minimum": 0,
+          "title": "Grid Revision",
+          "type": "integer"
+        },
+        "chart": {
+          "$ref": "#/$defs/StrictObjectRef"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetProfile"
+        },
+        "range_q": {
+          "$ref": "#/$defs/ArrangementRangeQ"
+        },
+        "mode": {
+          "enum": [
+            "single_lane",
+            "heuristic_arranger"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "lane": {
+          "anyOf": [
+            {
+              "maximum": 3,
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lane"
+        },
+        "reference_chart": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/StrictObjectRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "reference_influence": {
+          "anyOf": [
+            {
+              "enum": [
+                "rhythm_theme",
+                "pattern_theme",
+                "adaptation"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Reference Influence"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "project_id",
+        "generator_id",
+        "generator_version",
+        "audio_asset_id",
+        "audio_sha256",
+        "analysis",
+        "plan",
+        "grid_revision",
+        "chart",
+        "target",
+        "range_q",
+        "mode",
+        "seed"
+      ],
+      "title": "ArrangementRequest",
+      "type": "object"
+    },
+    "AudioAsset": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "sample_rate": {
+          "exclusiveMinimum": 0,
+          "title": "Sample Rate",
+          "type": "integer"
+        },
+        "channels": {
+          "exclusiveMinimum": 0,
+          "title": "Channels",
+          "type": "integer"
+        },
+        "frames": {
+          "minimum": 0,
+          "title": "Frames",
+          "type": "integer"
+        },
+        "duration_sec": {
+          "minimum": 0,
+          "title": "Duration Sec",
+          "type": "number"
+        },
+        "subtype": {
+          "title": "Subtype",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "sample_rate",
+        "channels",
+        "frames",
+        "duration_sec",
+        "subtype"
+      ],
+      "title": "AudioAsset",
+      "type": "object"
+    },
+    "AudioTimeRef": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "audio",
+          "title": "Kind",
+          "type": "string"
+        },
+        "time_sec": {
+          "title": "Time Sec",
+          "type": "number"
+        }
+      },
+      "required": [
+        "kind",
+        "time_sec"
+      ],
+      "title": "AudioTimeRef",
+      "type": "object"
+    },
+    "BeatTimeRef": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "const": "beat",
+          "title": "Kind",
+          "type": "string"
+        },
+        "beat_q": {
+          "title": "Beat Q",
+          "type": "number"
+        },
+        "micro_offset_sec": {
+          "default": 0,
+          "title": "Micro Offset Sec",
+          "type": "number"
+        }
+      },
+      "required": [
+        "kind",
+        "beat_q"
+      ],
+      "title": "BeatTimeRef",
+      "type": "object"
+    },
+    "Chart": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "grid_revision": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Grid Revision",
+          "type": "integer"
+        },
+        "metadata": {
+          "$ref": "#/$defs/ChartMetadata"
+        },
+        "target_profile": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ObjectRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "review": {
+          "default": "needs_review",
+          "title": "Review",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "events": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/HitEvent"
+          },
+          "title": "Events",
+          "type": "array"
+        }
+      },
+      "title": "Chart",
+      "type": "object"
+    },
+    "ChartDiff": {
+      "additionalProperties": false,
+      "properties": {
+        "added_event_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Added Event Ids",
+          "type": "array"
+        },
+        "removed_event_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Removed Event Ids",
+          "type": "array"
+        },
+        "changed_event_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Changed Event Ids",
+          "type": "array"
+        }
+      },
+      "title": "ChartDiff",
+      "type": "object"
+    },
+    "ChartDraft": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "base_chart": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "chart": {
+          "$ref": "#/$defs/Chart"
+        },
+        "diff": {
+          "$ref": "#/$defs/ChartDiff"
+        },
+        "validation": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Diagnostic"
+          },
+          "title": "Validation",
+          "type": "array"
+        },
+        "generation_run": {
+          "$ref": "#/$defs/GenerationRun"
+        }
+      },
+      "required": [
+        "base_chart",
+        "chart",
+        "diff",
+        "generation_run"
+      ],
+      "title": "ChartDraft",
+      "type": "object"
+    },
+    "ChartMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "rank": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Rank"
+        },
+        "speed": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speed"
+        }
+      },
+      "title": "ChartMetadata",
+      "type": "object"
+    },
+    "ChartNote": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "lane": {
+          "maximum": 3,
+          "minimum": 0,
+          "title": "Lane",
+          "type": "integer"
+        },
+        "hand_hint": {
+          "anyOf": [
+            {
+              "enum": [
+                "left",
+                "right"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Hand Hint"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "locks": {
+          "$ref": "#/$defs/NoteLocks"
+        }
+      },
+      "required": [
+        "lane"
+      ],
+      "title": "ChartNote",
+      "type": "object"
+    },
+    "CommandEnvelope": {
+      "additionalProperties": false,
+      "properties": {
+        "command_id": {
+          "title": "Command Id",
+          "type": "string"
+        },
+        "base_project_revision": {
+          "title": "Base Project Revision",
+          "type": "integer"
+        },
+        "expected_grid_revision": {
+          "title": "Expected Grid Revision",
+          "type": "integer"
+        },
+        "expected_chart_revisions": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Expected Chart Revisions",
+          "type": "object"
+        },
+        "kind": {
+          "title": "Kind",
+          "type": "string"
+        },
+        "payload": {
+          "additionalProperties": true,
+          "title": "Payload",
+          "type": "object"
+        }
+      },
+      "required": [
+        "command_id",
+        "base_project_revision",
+        "expected_grid_revision",
+        "expected_chart_revisions",
+        "kind",
+        "payload"
+      ],
+      "title": "CommandEnvelope",
+      "type": "object"
+    },
+    "CoverAsset": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "width": {
+          "exclusiveMinimum": 0,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "exclusiveMinimum": 0,
+          "title": "Height",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "width",
+        "height"
+      ],
+      "title": "CoverAsset",
+      "type": "object"
+    },
+    "Diagnostic": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "title": "Code",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "error",
+            "warning"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "event_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Event Ids",
+          "type": "array"
+        },
+        "note_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Note Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message"
+      ],
+      "title": "Diagnostic",
+      "type": "object"
+    },
+    "EventLocks": {
+      "additionalProperties": false,
+      "properties": {
+        "existence": {
+          "default": false,
+          "title": "Existence",
+          "type": "boolean"
+        },
+        "time": {
+          "default": false,
+          "title": "Time",
+          "type": "boolean"
+        },
+        "membership": {
+          "default": false,
+          "title": "Membership",
+          "type": "boolean"
+        }
+      },
+      "title": "EventLocks",
+      "type": "object"
+    },
+    "GeneratedSpan": {
+      "additionalProperties": false,
+      "properties": {
+        "events": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/HitEvent"
+          },
+          "title": "Events",
+          "type": "array"
+        },
+        "source_evidence": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Evidence",
+          "type": "array"
+        },
+        "diagnostics": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/Diagnostic"
+          },
+          "title": "Diagnostics",
+          "type": "array"
+        },
+        "target": {
+          "$ref": "#/$defs/TargetProfile"
+        },
+        "seed": {
+          "title": "Seed",
+          "type": "integer"
+        },
+        "backend_id": {
+          "minLength": 1,
+          "title": "Backend Id",
+          "type": "string"
+        },
+        "backend_version": {
+          "minLength": 1,
+          "title": "Backend Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target",
+        "seed",
+        "backend_id",
+        "backend_version"
+      ],
+      "title": "GeneratedSpan",
+      "type": "object"
+    },
+    "GenerationRun": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "request": {
+          "$ref": "#/$defs/ArrangementRequest"
+        },
+        "capabilities": {
+          "$ref": "#/$defs/GeneratorCapabilities"
+        },
+        "output": {
+          "$ref": "#/$defs/GeneratedSpan"
+        }
+      },
+      "required": [
+        "request",
+        "capabilities",
+        "output"
+      ],
+      "title": "GenerationRun",
+      "type": "object"
+    },
+    "GeneratorCapabilities": {
+      "additionalProperties": false,
+      "properties": {
+        "backend_id": {
+          "minLength": 1,
+          "title": "Backend Id",
+          "type": "string"
+        },
+        "backend_version": {
+          "minLength": 1,
+          "title": "Backend Version",
+          "type": "string"
+        },
+        "schema_versions": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Schema Versions",
+          "type": "array"
+        },
+        "feature_versions": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Feature Versions",
+          "type": "array"
+        },
+        "modes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Modes",
+          "type": "array"
+        },
+        "target_fields": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Target Fields",
+          "type": "array"
+        },
+        "lock_support": {
+          "default": "",
+          "title": "Lock Support",
+          "type": "string"
+        },
+        "context_limit_sec": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context Limit Sec"
+        },
+        "checkpoint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Checkpoint"
+        }
+      },
+      "required": [
+        "backend_id",
+        "backend_version"
+      ],
+      "title": "GeneratorCapabilities",
+      "type": "object"
+    },
+    "GridAnchor": {
+      "additionalProperties": false,
+      "properties": {
+        "beat_q": {
+          "title": "Beat Q",
+          "type": "number"
+        },
+        "time_sec": {
+          "title": "Time Sec",
+          "type": "number"
+        },
+        "origin": {
+          "default": "manual",
+          "title": "Origin",
+          "type": "string"
+        }
+      },
+      "required": [
+        "beat_q",
+        "time_sec"
+      ],
+      "title": "GridAnchor",
+      "type": "object"
+    },
+    "HitEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "time_ref": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/BeatTimeRef"
+            },
+            {
+              "$ref": "#/$defs/AudioTimeRef"
+            }
+          ],
+          "title": "Time Ref"
+        },
+        "notes": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ChartNote"
+          },
+          "title": "Notes",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        },
+        "locks": {
+          "$ref": "#/$defs/EventLocks"
+        }
+      },
+      "required": [
+        "time_ref"
+      ],
+      "title": "HitEvent",
+      "type": "object"
+    },
+    "Meter": {
+      "additionalProperties": false,
+      "properties": {
+        "numerator": {
+          "exclusiveMinimum": 0,
+          "title": "Numerator",
+          "type": "integer"
+        },
+        "denominator": {
+          "exclusiveMinimum": 0,
+          "title": "Denominator",
+          "type": "integer"
+        },
+        "bar_origin_beat_q": {
+          "default": 0,
+          "title": "Bar Origin Beat Q",
+          "type": "number"
+        }
+      },
+      "required": [
+        "numerator",
+        "denominator"
+      ],
+      "title": "Meter",
+      "type": "object"
+    },
+    "MotifLink": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "site_ids": {
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "title": "Site Ids",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        }
+      },
+      "required": [
+        "site_ids"
+      ],
+      "title": "MotifLink",
+      "type": "object"
+    },
+    "MusicalAnchor": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "time_sec": {
+          "minimum": 0,
+          "title": "Time Sec",
+          "type": "number"
+        },
+        "strength": {
+          "default": "soft",
+          "enum": [
+            "soft",
+            "required"
+          ],
+          "title": "Strength",
+          "type": "string"
+        },
+        "tolerance_sec": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Tolerance Sec",
+          "type": "number"
+        },
+        "target_scope": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Target Scope",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        }
+      },
+      "required": [
+        "time_sec"
+      ],
+      "title": "MusicalAnchor",
+      "type": "object"
+    },
+    "MusicalPlan": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "audio_asset_id": {
+          "minLength": 1,
+          "title": "Audio Asset Id",
+          "type": "string"
+        },
+        "audio_sha256": {
+          "pattern": "^[0-9a-fA-F]{64}$",
+          "title": "Audio Sha256",
+          "type": "string"
+        },
+        "analysis": {
+          "$ref": "#/$defs/ObjectRef"
+        },
+        "grid_revision": {
+          "minimum": 0,
+          "title": "Grid Revision",
+          "type": "integer"
+        },
+        "sections": {
+          "items": {
+            "$ref": "#/$defs/Section"
+          },
+          "minItems": 1,
+          "title": "Sections",
+          "type": "array"
+        },
+        "rhythm_sites": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/RhythmSite"
+          },
+          "title": "Rhythm Sites",
+          "type": "array"
+        },
+        "musical_anchors": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/MusicalAnchor"
+          },
+          "title": "Musical Anchors",
+          "type": "array"
+        },
+        "motif_links": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/MotifLink"
+          },
+          "title": "Motif Links",
+          "type": "array"
+        },
+        "user_annotations": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/UserAnnotation"
+          },
+          "title": "User Annotations",
+          "type": "array"
+        }
+      },
+      "required": [
+        "audio_asset_id",
+        "audio_sha256",
+        "analysis",
+        "grid_revision",
+        "sections"
+      ],
+      "title": "MusicalPlan",
+      "type": "object"
+    },
+    "NoteLocks": {
+      "additionalProperties": false,
+      "properties": {
+        "existence": {
+          "default": false,
+          "title": "Existence",
+          "type": "boolean"
+        },
+        "lane": {
+          "default": false,
+          "title": "Lane",
+          "type": "boolean"
+        }
+      },
+      "title": "NoteLocks",
+      "type": "object"
+    },
+    "ObjectRef": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "title": "ObjectRef",
+      "type": "object"
+    },
+    "ProjectView": {
+      "additionalProperties": false,
+      "properties": {
+        "project": {
+          "$ref": "#/$defs/SongProject"
+        },
+        "grid": {
+          "$ref": "#/$defs/TimingGrid"
+        },
+        "charts": {
+          "items": {
+            "$ref": "#/$defs/Chart"
+          },
+          "title": "Charts",
+          "type": "array"
+        }
+      },
+      "required": [
+        "project",
+        "grid",
+        "charts"
+      ],
+      "title": "ProjectView",
+      "type": "object"
+    },
+    "Provenance": {
+      "additionalProperties": false,
+      "properties": {
+        "created_by": {
+          "default": "manual",
+          "enum": [
+            "manual",
+            "generated",
+            "imported"
+          ],
+          "title": "Created By",
+          "type": "string"
+        },
+        "operation_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Operation Id"
+        },
+        "source_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Source Ids",
+          "type": "array"
+        },
+        "generation_run_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Generation Run Id"
+        },
+        "source_origin": {
+          "anyOf": [
+            {
+              "enum": [
+                "manual",
+                "generated",
+                "unknown"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Origin"
+        },
+        "last_modified_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Modified By"
+        },
+        "last_modified_operation_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Modified Operation Id"
+        }
+      },
+      "title": "Provenance",
+      "type": "object"
+    },
+    "RhythmSite": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "time_sec": {
+          "minimum": 0,
+          "title": "Time Sec",
+          "type": "number"
+        },
+        "beat_q": {
+          "title": "Beat Q",
+          "type": "number"
+        },
+        "attack_strength": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Attack Strength"
+        },
+        "metric_role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Metric Role"
+        },
+        "source_role": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Role"
+        },
+        "acoustic_evidence": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Acoustic Evidence",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        }
+      },
+      "required": [
+        "time_sec",
+        "beat_q"
+      ],
+      "title": "RhythmSite",
+      "type": "object"
+    },
+    "Section": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "start_sec": {
+          "minimum": 0,
+          "title": "Start Sec",
+          "type": "number"
+        },
+        "end_sec": {
+          "exclusiveMinimum": 0,
+          "title": "End Sec",
+          "type": "number"
+        },
+        "kind": {
+          "default": "whole_song",
+          "title": "Kind",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        }
+      },
+      "required": [
+        "start_sec",
+        "end_sec"
+      ],
+      "title": "Section",
+      "type": "object"
+    },
+    "SongMetadata": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "default": "",
+          "title": "Title",
+          "type": "string"
+        },
+        "artist": {
+          "default": "",
+          "title": "Artist",
+          "type": "string"
+        },
+        "mapper": {
+          "default": "",
+          "title": "Mapper",
+          "type": "string"
+        },
+        "subtitle": {
+          "default": "",
+          "title": "Subtitle",
+          "type": "string"
+        },
+        "explicit": {
+          "default": false,
+          "title": "Explicit",
+          "type": "boolean"
+        }
+      },
+      "title": "SongMetadata",
+      "type": "object"
+    },
+    "SongProject": {
+      "additionalProperties": false,
+      "properties": {
+        "schema_version": {
+          "default": 1,
+          "title": "Schema Version",
+          "type": "integer"
+        },
+        "creation_request_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Creation Request Hash"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "metadata": {
+          "$ref": "#/$defs/SongMetadata"
+        },
+        "audio": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/AudioAsset"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "cover": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CoverAsset"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "analysis": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ObjectRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "plan_inputs": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ObjectRef"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "grid_revision": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Grid Revision",
+          "type": "integer"
+        },
+        "chart_heads": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ObjectRef"
+          },
+          "title": "Chart Heads",
+          "type": "array"
+        },
+        "export_presets": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Export Presets",
+          "type": "array"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        }
+      },
+      "title": "SongProject",
+      "type": "object"
+    },
+    "StrictObjectRef": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "revision": {
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "revision"
+      ],
+      "title": "StrictObjectRef",
+      "type": "object"
+    },
+    "TargetProfile": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "version": {
+          "minimum": 1,
+          "title": "Version",
+          "type": "integer"
+        },
+        "name": {
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "intended_rank": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Intended Rank"
+        },
+        "allowed_subdivisions": {
+          "anyOf": [
+            {
+              "items": {
+                "exclusiveMinimum": 0,
+                "type": "integer"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Allowed Subdivisions"
+        },
+        "syncopation_budget": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Syncopation Budget"
+        },
+        "ornament_budget": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Ornament Budget"
+        },
+        "target_hits_per_second": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Target Hits Per Second"
+        },
+        "max_hits_in_window": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Hits In Window"
+        },
+        "window_sec": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Window Sec"
+        },
+        "double_event_fraction": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Double Event Fraction"
+        },
+        "max_simultaneous_notes": {
+          "anyOf": [
+            {
+              "maximum": 2,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Simultaneous Notes"
+        },
+        "min_same_hand_interval_sec": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Min Same Hand Interval Sec"
+        },
+        "max_same_hand_burst": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Max Same Hand Burst"
+        },
+        "movement_profile": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Movement Profile"
+        },
+        "transition_complexity": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Transition Complexity"
+        },
+        "recovery_policy": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Recovery Policy"
+        },
+        "accent_preference": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Accent Preference"
+        },
+        "motif_consistency": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Motif Consistency"
+        },
+        "style_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Style Id"
+        }
+      },
+      "required": [
+        "version",
+        "name"
+      ],
+      "title": "TargetProfile",
+      "type": "object"
+    },
+    "TempoSegment": {
+      "additionalProperties": false,
+      "properties": {
+        "start_time_sec": {
+          "minimum": 0,
+          "title": "Start Time Sec",
+          "type": "number"
+        },
+        "start_beat_q": {
+          "title": "Start Beat Q",
+          "type": "integer"
+        },
+        "bpm_quarter": {
+          "exclusiveMinimum": 0,
+          "title": "Bpm Quarter",
+          "type": "number"
+        },
+        "grid_division": {
+          "exclusiveMinimum": 0,
+          "title": "Grid Division",
+          "type": "integer"
+        },
+        "origin": {
+          "default": "manual",
+          "title": "Origin",
+          "type": "string"
+        },
+        "review": {
+          "default": "needs_review",
+          "title": "Review",
+          "type": "string"
+        }
+      },
+      "required": [
+        "start_time_sec",
+        "start_beat_q",
+        "bpm_quarter",
+        "grid_division"
+      ],
+      "title": "TempoSegment",
+      "type": "object"
+    },
+    "TimingGrid": {
+      "additionalProperties": false,
+      "properties": {
+        "revision": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Revision",
+          "type": "integer"
+        },
+        "segments": {
+          "items": {
+            "$ref": "#/$defs/TempoSegment"
+          },
+          "minItems": 1,
+          "title": "Segments",
+          "type": "array"
+        },
+        "meter": {
+          "$ref": "#/$defs/Meter"
+        },
+        "review": {
+          "default": "needs_review",
+          "title": "Review",
+          "type": "string"
+        },
+        "anchors": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/GridAnchor"
+          },
+          "title": "Anchors",
+          "type": "array"
+        }
+      },
+      "required": [
+        "segments"
+      ],
+      "title": "TimingGrid",
+      "type": "object"
+    },
+    "UserAnnotation": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "minLength": 1,
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "provenance": {
+          "$ref": "#/$defs/Provenance"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "title": "UserAnnotation",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "project_view": {
+      "$ref": "#/$defs/ProjectView"
+    },
+    "command_envelope": {
+      "$ref": "#/$defs/CommandEnvelope"
+    },
+    "arrangement_request": {
+      "$ref": "#/$defs/ArrangementRequest"
+    },
+    "chart_draft": {
+      "$ref": "#/$defs/ChartDraft"
+    },
+    "generator_capabilities": {
+      "$ref": "#/$defs/GeneratorCapabilities"
+    },
+    "musical_plan": {
+      "$ref": "#/$defs/MusicalPlan"
+    }
+  },
+  "required": [
+    "project_view",
+    "command_envelope",
+    "arrangement_request",
+    "chart_draft",
+    "generator_capabilities",
+    "musical_plan"
+  ],
+  "title": "UiContract",
+  "type": "object"
+}
